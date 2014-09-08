@@ -9,6 +9,8 @@ author:
   name: Matt Cain
   email: matt@cainmedia.com
 
+url: https://mattcain.github.io
+
 # Grunt handles images and assets.
 exclude: ['img', 'css', 'js', 'fonts',
           '**.png', '**.jpg', '**.jpeg', '**.gif', '**.webp', '**.svg', '**.ico']
