@@ -1,0 +1,1 @@
+(function(){!function(a){return a("#mobile-nav-trigger").on("click",function(){return a("#main-nav").slideToggle(function(){return a(this).toggleClass("closed").removeAttr("style")})}),a(".hiringEmail").attr("href","mailto:matt@cainmedia.com")}(jQuery)}).call(this);
