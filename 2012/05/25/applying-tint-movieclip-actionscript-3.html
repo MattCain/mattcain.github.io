@@ -1,0 +1,25 @@
+<!DOCTYPE html><html class=no-js><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><title>Applying a Tint to a MovieClip in Actionscript 3</title><meta name=description content="Matt Cain - Freelance and Contract web developer London to Milton Keynes. HTML5, CSS3, Sass, Javascript, jQuery, PHP, CakePHP, Node.js, MySQL, MongoDB, Nginx"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=canonical href=http://www.caindev.com/2012/05/25/applying-tint-movieclip-actionscript-3.html><!-- Place favicon.ico and apple-touch-icon(s) in the root directory --><link href="//fonts.googleapis.com/css?family=Alegreya+Sans+SC" rel=stylesheet type=text/css><link href="//fonts.googleapis.com/css?family=Oxygen" rel=stylesheet type=text/css><link href="//fonts.googleapis.com/css?family=Open+Sans:400,600" rel=stylesheet type=text/css><link href=//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css rel=stylesheet><link rel=stylesheet href=/css/main.0f86.css><script src=/js/head-scripts.a8bc.js></script></head><body><!--[if lt IE 8]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]--><header id=header><a id=me href="/"><div id=avatar><img src=/img/me.81c5.png></div><span id=name>Matt Cain</span></a><p id=webdev>Web Developer</p><div id=mobile-nav-trigger><i class="fa fa-bars"></i></div><nav id=main-nav class=closed><ul><li><a href="/">About</a></li><li><a href="/blog/">Blog</a></li></ul><div id=social><a href=https://github.com/MattCain target=_blank><img src=/img/github.5899.png></a> <a href=https://stackoverflow.com/users/1003994/matt-cain target=_blank><img src=/img/so.629c.png></a> <a href=https://uk.linkedin.com/in/mattcaindev target=_blank><img src=/img/linkedin.a260.png></a></div></nav></header><main><div id=content class=clearfix><article class=post><h1 class=post-title>Applying a Tint to a MovieClip in Actionscript 3</h1><time datetime="">Posted 25 May 2012</time><p>Within the Flash CS3 IDE you can quite easily add a “tint” to a MovieClip. In the “Color” drop down menu on the Properties pane whilst you have a MovieClip selected, you’ll find the tint options. These are very useful.</p><p>However, when I decided that I would like to add some tints during run-time using Actionscript, it took me a while to figure out how to do it. Here’s what I eventually came across:</p><figure class=highlight><pre><code class=language-actionscript data-lang=actionscript>// import the Color class.
+import fl.motion.Color;
+// create a Color object
+var c:Color = new Color();
+// set the color of the tint and set the multiplier/alpha
+c.setTint(0xff0000, 0.8);
+// apply the tint to the colorTransform property of the
+// desired MovieClip/DisplayObject
+mc.transform.colorTransform = c;
+This will add a red 80% tint to your MovieClip.</code></pre></figure><p>The setTint() method changes the tintColor and tintMultiplier properties of the Color object to the arguments that you pass. The first argument is a uint value representing the color you want to use (0x followed by the RGB color code), and the second argument is the multiplier (or opacity) of the tint, which must be between 0 and 1.</p><p>Color is an extension of the ColorTransform class, which allows you to apply a Color object to the colorTransform property of the MovieClip’s transform property.</p><p>Let’s do a practical example. The following is the code for applying a tint to a MovieClip based on the value of a slider.</p><figure class=highlight><pre><code class=language-actionscript data-lang=actionscript>// set slider event listener
+slider.addEventListener(SliderEvent.CHANGE, changeTint);
+ 
+function changeTint(s:SliderEvent):void {
+    var c:Color = new Color();
+    c.setTint(0xFF0000, slider.value);
+    mc.transform.colorTransform = c;
+}</code></pre></figure><p>Just make sure the minimum value of the slider is 0 and the max is 1.</p><p>Here’s an example:</p><object type=application/x-shockwave-flash data=/blog/attachments/TintExample.swf width=200 height=100><param name=movie value="/blog/attachments/TintExample.swf"><param name=quality value="high"></object></article></div></main><script src=//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js></script><script>window.jQuery || document.write('<script src="/_bower_components/jquery.js"><\/script>')</script><script src=/js/script.d41d.js></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-12358561-6', 'auto');
+  ga('send', 'pageview');</script></body></html>

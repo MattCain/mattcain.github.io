@@ -1,0 +1,99 @@
+<!DOCTYPE html><html class=no-js><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><title>Libgdx Splash Screen Image Tutorial</title><meta name=description content="Matt Cain - Freelance and Contract web developer London to Milton Keynes. HTML5, CSS3, Sass, Javascript, jQuery, PHP, CakePHP, Node.js, MySQL, MongoDB, Nginx"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=canonical href=http://www.caindev.com/2012/06/04/libgdx-splash-screen-image-tutorial.html><!-- Place favicon.ico and apple-touch-icon(s) in the root directory --><link href="//fonts.googleapis.com/css?family=Alegreya+Sans+SC" rel=stylesheet type=text/css><link href="//fonts.googleapis.com/css?family=Oxygen" rel=stylesheet type=text/css><link href="//fonts.googleapis.com/css?family=Open+Sans:400,600" rel=stylesheet type=text/css><link href=//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css rel=stylesheet><link rel=stylesheet href=/css/main.0f86.css><script src=/js/head-scripts.a8bc.js></script></head><body><!--[if lt IE 8]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]--><header id=header><a id=me href="/"><div id=avatar><img src=/img/me.81c5.png></div><span id=name>Matt Cain</span></a><p id=webdev>Web Developer</p><div id=mobile-nav-trigger><i class="fa fa-bars"></i></div><nav id=main-nav class=closed><ul><li><a href="/">About</a></li><li><a href="/blog/">Blog</a></li></ul><div id=social><a href=https://github.com/MattCain target=_blank><img src=/img/github.5899.png></a> <a href=https://stackoverflow.com/users/1003994/matt-cain target=_blank><img src=/img/so.629c.png></a> <a href=https://uk.linkedin.com/in/mattcaindev target=_blank><img src=/img/linkedin.a260.png></a></div></nav></header><main><div id=content class=clearfix><article class=post><h1 class=post-title>Libgdx Splash Screen Image Tutorial</h1><time datetime="">Posted 04 Jun 2012</time><p>Lots of people like to start their app with a splash screen image. The libgdx game framework makes this nice and easy.</p><p>Start with your initial game class, which should extend Game.</p><figure class=highlight><pre><code class=language-java data-lang=java>import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
+ 
+public class MyGame extends Game
+{
+    public static int WIDTH;
+    public static int HEIGHT;
+ 
+    @Override
+    public void create() {
+        WIDTH = Gdx.graphics.getWidth();
+        HEIGHT = Gdx.graphics.getHeight();
+ 
+        Texture.setEnforcePotImages(false);
+        setScreen( new Splash(this) );
+        }
+    @Override
+    public void resize(int width, int height) {
+    }
+    @Override
+    public void pause() {
+    }
+    @Override
+    public void resume() {
+    }
+    @Override
+    public void dispose() {
+    }
+}</code></pre></figure><p><strong>Line 12:</strong> This is the <code>create()</code> method, which is called once when your game is started, do your initialization here.</p><p><strong>Lines 13 and 14:</strong> We store the width and height of the screen in static variables so that we can access them easily throughout our app without calling <code>getWidth()</code> and <code>getHeight()</code> every time we want those values.</p><p><strong>Line 16:</strong> <code>Texture.setEnforcePotImages(false);</code> This allows us to use an image that’s width and height aren’t powers of 2.</p><p><strong>Line 17:</strong> This sets the current screen output to be controlled by our Splash class. We pass in a reference to our main class so that we can pass on control of the screen to a new class once we want to stop showing the splash screen.</p><p>Now lets move on to our Splash class, which should implement Screen.</p><figure class=highlight><pre><code class=language-actionscript data-lang=actionscript>import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+ 
+public class Splash implements Screen
+{
+    private Texture logo;
+    private SpriteBatch spriteBatch;
+    private MyGame game;
+ 
+    public Splash( MyGame game )
+    {
+    	this.game = game;
+    }
+ 
+    @Override
+    public void show()
+    {
+        logo = new Texture(Gdx.files.internal(&quot;logo.png&quot;));
+        spriteBatch = new SpriteBatch();
+    }
+ 
+    @Override
+    public void render(float delta)
+    {
+        handleInput();
+ 
+        GL10 gl = Gdx.graphics.getGL10();        
+        gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+ 
+        spriteBatch.begin();
+        spriteBatch.draw(logo, 0, 0, MyGame.WIDTH, MyGame.HEIGHT);
+        spriteBatch.end();
+    }
+ 
+    private void handleInput()
+    {
+        if(Gdx.input.justTouched())
+        {
+            game.setScreen(new LevelOne(game));
+        }
+    }
+ 
+    @Override
+    public void resize(int width, int height) {
+    }
+    @Override
+    public void hide() {
+    }
+    @Override
+    public void pause() {
+    }
+    @Override
+    public void resume() {
+    }
+    @Override
+    public void dispose() {	
+    }
+}</code></pre></figure><p><strong>Line 15:</strong> We store a reference to our main game object so we can pass on control of the screen when the splash screen is done with. You may want to change/remove this depending on how you want to manage your screens.</p><p><strong>Line 19:</strong> The <code>show()</code> method is only called once, it’s pretty much the same as the <code>create()</code> method in our main game class.</p><p><strong>Line 21:</strong> We load our splash screen image and store it in texture.</p><p><strong>Line 22:</strong> We initialize a SpriteBatch for drawing our splash screen image to the screen.</p><p><strong>Line 26:</strong> This is our <code>render()</code> method, where we draw our output.</p><p><strong>Line 28:</strong> we call our <code>handleInput()</code> method, which listens for a tap of the screen which lets us know that the user wants to move on from the splash screen and start the game.</p><p><strong>Lines 30 and 31:</strong> This will clear our screen.</p><p><strong>Lines 33 to 35:</strong> These will use our SpriteBatch object to draw our logo to the screen, using the <code>HEIGHT</code> and <code>WIDTH</code> values we stored earlier.</p><p><strong>Line 42:</strong> In the event of the screen having just been tapped, we pass control of the screen to a new class using the reference to the main game object that we stored earlier.</p><p>This should give you a nice working splash screen that can be skipped by tapping the screen, much like the one used by popular games like Angry Birds. Make sure to use an image big enough for screen with high resolution. Your image will still look good if it is scaled down, but it’ll look terrible if it has to be scaled up. You could always include multiple images and display a certain one depending on the resolution being used.</p><p>Hope this helps.</p></article></div></main><script src=//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js></script><script>window.jQuery || document.write('<script src="/_bower_components/jquery.js"><\/script>')</script><script src=/js/script.d41d.js></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-12358561-6', 'auto');
+  ga('send', 'pageview');</script></body></html>
